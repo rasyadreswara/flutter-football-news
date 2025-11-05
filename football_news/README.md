@@ -1,16 +1,78 @@
-# football_news
+Jelaskan apa itu widget tree pada Flutter dan bagaimana hubungan parent-child (induk-anak) bekerja antar widget :
+Widget tree adalah struktur hierarki semua widget di layar. Setiap widget punya parent (induk) dan bisa punya child (anak).
+Alur dasarnya saat layout:
+1. Parent mengirim constraints ke child (batas ukuran).
+2. Child mengembalikan size yang dipilih sesuai constraints.
+3. Parent memposisikan child di dalam dirinya.
+Relasi parent–child inilah yang menentukan tampilan, ukuran, dan posisi elemen UI (mis. Column berperan sebagai parent bagi tombol-tombolnya).
 
-A new Flutter project.
+Sebutkan semua widget yang kamu gunakan dalam proyek ini dan jelaskan fungsinya :
+MaterialApp: Pembungkus aplikasi Material; sediakan tema, navigasi, localizations, dan ScaffoldMessenger default.
 
-## Getting Started
+StatelessWidget (FootballShopApp, MenuPage, _MenuButton): Widget tanpa state internal; dibangun ulang saat ada perubahan dari atas (parent) atau dependensi Inherited.
 
-This project is a starting point for a Flutter application.
+Scaffold: Kerangka halaman Material standar (app bar, body, snackbar, dll.).
 
-A few resources to get you started if this is your first Flutter project:
+AppBar: Bilah aplikasi di atas untuk judul & action.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Text: Menampilkan teks (“Football Shop”, label tombol, isi snackbar).
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Padding: Memberi jarak tepi di sekitar child.
+
+Column: Menyusun children secara vertikal.
+
+SizedBox: Mengatur ukuran tetap/ruang antar elemen (tinggi tombol & spacer 12 px).
+
+ElevatedButton.icon: Tombol Material dengan ikon + teks. (Variasi dari ElevatedButton.)
+
+Icon: Menampilkan ikon Material (list, inventory, add).
+
+SnackBar: Komponen umpan balik singkat di bawah layar (dipicu oleh ScaffoldMessenger).
+
+ScaffoldMessenger (disediakan otomatis oleh MaterialApp): Pengelola SnackBar/MaterialBanner di atas seluruh halaman.
+
+Apa fungsi dari widget MaterialApp? Jelaskan mengapa widget ini sering digunakan sebagai widget root :
+Fungsi :
+1. Menyediakan Material design defaults (tema, font, motion).
+2. Menyiapkan navigator dan route management.
+3. Menyediakan localizations dan text direction.
+Karena ia menyatukan tema, navigasi, dan infrastruktur Material, MaterialApp hampir selalu dipakai sebagai root aplikasi Material agar seluruh subtree mendapat konteks & resource yang konsisten.
+
+Jelaskan perbedaan antara StatelessWidget dan StatefulWidget. Kapan kamu memilih salah satunya? :
+StatelessWidget saat :
+1. Tidak punya state internal yang berubah seiring waktu.
+2. Cocok untuk UI statis atau seluruh datanya berasal dari parent.
+Contoh di proyek ini: semua layar & tombol (kita hanya memicu snackbar, tidak menyimpan state).
+
+StatefulWidget saaat :
+1. Memiliki objek State terpisah, bisa memanggil setState untuk rebuild berdasarkan perubahan.
+2. Pakai saat ada data dinamis: form input, animasi manual, counter, stream, async data (loading/success/error), dsb
+
+Apa itu BuildContext dan mengapa penting di Flutter? Bagaimana penggunaannya di metode build? :
+BuildContext adalah handle ke posisi widget di widget tree. Dengan context, widget:
+
+Menemukan ancestor/inherited widgets (mis. Theme.of(context), ScaffoldMessenger.of(context), Navigator.of(context)).
+
+Mendapat lokalisasi dan arah teks.
+
+Memicu navigasi, snackbar, dialog, dsb.
+
+Di build(BuildContext context), kita pakai context untuk:
+
+Mengakses tema/media query (jika perlu).
+
+Memanggil ScaffoldMessenger.of(context) untuk menampilkan SnackBar (seperti di proyek ini).
+
+Memanggil Navigator.of(context).push(...) (kalau nanti menambah halaman).
+
+Jelaskan konsep "hot reload" di Flutter dan bagaimana bedanya dengan "hot restart" :
+Hot reload :
+1. Menyuntikkan code changes ke Dart VM lalu rebuild widget tree.
+2. State StatefulWidget tetap dipertahankan.
+3. Cepat untuk ubah tampilan, layout, teks, atau logic build.
+4. Tidak selalu menerapkan perubahan yang terjadi di initState atau perubahan struktur besar tertentu.
+
+Hot restart :
+1. Menjalankan ulang main() dan menghapus semua state di memori.
+2. Aplikasi kembali ke kondisi awal, tapi tidak “cold boot” penuh (engine tetap).
+Gunakan ketika perubahan tidak ter-reflect oleh hot reload 
